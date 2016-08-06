@@ -38,12 +38,13 @@ class FoodPrices(db.Model):
     city = db.Column(db.String(60), nullable=True)
     market = db.Column(db.String(60), nullable=True)
     commodity = db.Column(db.String(60), nullable=True)
+    currency = db.Column(db.String(60), nullable=True)
     priceform = db.Column(db.String(60), nullable=True)
     quantityunit = db.Column(db.String(60), nullable=True)
     month = db.Column(db.Integer, nullable=True)
     year = db.Column(db.Integer, nullable=True)
     price = db.Column(db.Integer, nullable=True)
-    commoditysource = db.Column(db.String(60), nullable=True)
+    commoditysource = db.Column(db.String(120), nullable=True)
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -70,18 +71,23 @@ class FoodPrices(db.Model):
 #         return "<Unsafe unsafe_id=%s datetime=%s geo_location=%s sms_sent=%s user_id=%s>" % (self.location_id, self.datetime, self.geo_location, self.sms_sent, self.user_id)
 
 
+
 ##############################################################################
+# Helper functions
 
-def connect_to_db(app, db_uri="postgresql:///proactivesupply"):
-    """Connect the database to our Flask app."""
+def connect_to_db(app):
+    """Connect the database to the Flask app"""
 
-    # Configure to use our PostgreSQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///proactivesupply'
     db.app = app
     db.init_app(app)
 
-if __name__ == "__main__":
-    from server import app
 
+if __name__ == '__main__':
+
+    from server import app
     connect_to_db(app)
     print "Connected to DB."
+
+    db.configure_mappers()
+    db.create_all()
